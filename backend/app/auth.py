@@ -38,3 +38,46 @@ def create_recovery_token(email: str):
     recovery_token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     
     return recovery_token
+
+# Verifica e decodifica o token de recuperação
+def verify_recovery_token(token: str):
+    """
+    Verifica a validade do token de recuperação de senha.
+    Retorna o email se o token for válido, caso contrário, gera uma exceção.
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise JWTError("Token inválido: email não encontrado.")
+        return email
+    except JWTError:
+        raise JWTError("Token inválido ou expirado.")
+
+# Verifica e decodifica o token de verificação de e-mail
+def verify_email_token(token: str):
+    """
+    Verifica a validade do token de verificação de e-mail.
+    Retorna o e-mail se o token for válido, caso contrário, gera uma exceção.
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None or payload.get("type") != "email_verification":
+            raise JWTError("Token inválido ou tipo de token incorreto.")
+        return email
+    except JWTError:
+        raise JWTError("Token inválido ou expirado.")
+
+def generate_email_verification_token(email: str):
+    """
+    Gera um token de verificação de e-mail.
+    """
+    expiration_time = datetime.utcnow() + timedelta(hours=24)  # Token válido por 24 horas
+    payload = {
+        "sub": email,
+        "exp": expiration_time,
+        "type": "email_verification"
+    }
+    
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)

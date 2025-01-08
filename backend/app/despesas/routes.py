@@ -56,15 +56,3 @@ def listar_despesas(db: Session = Depends(get_db)):
 def listar_despesas_por_categoria(categoria: str, db: Session = Depends(get_db)):
     despesas = crud.get_despesas_por_categoria(db, categoria)
     return despesas
-
-# Endpoint para listar despesas por período (data inicial e final)
-@router.get("/despesas/periodo", response_model=list[schemas.Despesa])
-def listar_despesas_por_periodo(data_inicio: str, data_fim: str, db: Session = Depends(get_db)):
-    despesas = crud.get_despesas_por_periodo(db, data_inicio, data_fim)
-    return despesas
-
-# Endpoint para relatório de gastos mensais
-@router.get("/despesas/relatorio", response_model=dict)
-def relatorio_mnensal(db: Session = Depends(get_db)):
-    relatorio = crud.get_relatorio_mensal(db)
-    return relatorio

@@ -46,13 +46,3 @@ def delete_despesa(db: Session, despesa_id: int):
 # Select e filtro na despesa por categoria
 def get_despesas_por_categoria(db: Session, categoria: str):
     return db.query(models.Despesa).filter(models.Despesa.categoria == categoria).all()
-
-# Select e filtro na despesa por periodo
-def get_despesas_por_periodo(db: Session, data_inicio: str, data_fim: str):
-    return db.query(models.Despesa).filter(models.Despesa.data.between(data_inicio, data_fim)).all()
-
-# Select no relatorio mensal
-def get_relatorio_mensal(db: Session):
-    despesas = db.query(models.Despesa).all()
-    total = sum(despesa.valor for despesa in despesas)
-    return {"total_gastos": total, "total_despesas": len(despesas)}

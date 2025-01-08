@@ -13,3 +13,4 @@ class Usuario(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     senha_hash = Column(String, nullable=False) # Armazena a senha com hash
     ativo = Column(Boolean, default=True) # Ativa/Desativa o usuário
+    email_verificado = Column(Boolean, default=False)
